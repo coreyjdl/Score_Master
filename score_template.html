@@ -1,0 +1,21 @@
+
+<p id="question">{{question}}</p>
+
+
+<table id="score_table">
+	<tr>
+	 <th id="team_name">Team Names</th> 
+		{% for i in q_count %}
+			<th id="score">Q{{loop.index}}</th>
+		{% endfor %}
+	<tr>
+	{% for team in teams %}
+		<tr><td id="team_name">{{ team }}</td>
+		
+		{% for i in q_count %}
+			<td id="score">0</td>
+		{% endfor %}
+		</tr>
+	{% endfor %}
+</table>
+	
