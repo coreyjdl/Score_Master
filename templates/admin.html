@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!-- link rel="stylesheet" type="text/css" href="/static/style.css"-->
+		<style>
+			#entry {
+				width: 30px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="wrap">
+			<div id="question">{{question}}</div>
+			
+			<form action="" method="post">
+				<textarea rows="10" cols="100" id="question" name="question"></textarea><br>
+				<input type="submit" id="question_button" value="Post Question">
+			</form>
+			
+			<fieldset>
+			<form action="" method="post" id="scores">
+				<table id="score">
+					<tr>
+						<th>Team Name</th>
+						{% if q_count %}
+						{%- for i in q_count %}
+							<th>Q{{ loop.index }}</th>	
+							{%- if loop.last %}
+									<th>Q{{ loop.index + 1 }}</th>
+							{%- endif %}
+						{%- endfor %}
+						{% endif %}
+						<th>Delete Team</th>
+					</tr>
+					{%- for team in teams %}
+					<tr>
+						<td>{{team}}</td>
+						{%- if teams[team] %}
+							{%- for score in teams[team] %}
+								<td><input id="entry" type="text" name="score,{{team}},{{loop.index}}" value="{{score}}"></td>
+									{%- if q_count %}
+										{%- if loop.last %}
+											<td><input id="entry" type="text" name="score,{{team}},{{loop.index + 1}}"></td>
+										{%- endif -%}
+									{%- endif -%}
+							{%- endfor %}
+						{% else %}
+							<td><input id="entry" type="text" class="score" name="score,{{team}},1" value=""></td>
+						{% endif %}
+						<td headers="Delete Team"><input id="entry" type="checkbox" id="delete" name="del{{loop.index}}" value="{{team}}">Delete Team</td>
+					</tr>
+					{% endfor %}
+			
+				</table>
+				<input type="submit" id="post_button" value="Submit Changes"></input>
+			</form>
+			</fieldset>
+			
+			<form id="add_team" method="post" action="/admin">
+				<input type="text" name="add_team" id="add_team">
+				<input type="submit" value="Add Team">
+			</form>
+		</div>
+	</body>
+</html>

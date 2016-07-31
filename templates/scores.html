@@ -1,0 +1,18 @@
+<table id="score">
+	<tr>
+		<th>Team Name</th>
+		{% if q_count %}
+		{%- for i in q_count %}
+		<th>Q{{loop.index}}</th>
+		{%- endfor %}
+		{%- endif %}
+	</tr>
+	{%- for team in teams %}
+	<tr>
+		<td>{{team}}</td>
+		{%- for score in teams[team] %}
+			<td>{{score}}</td>
+		{% endfor %}
+	</tr>
+	{% endfor %}
+</table>

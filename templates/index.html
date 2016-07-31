@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="/static/style.css">
+		<title>Welcome to Trivia</title>
+	</head>
+		<body>
+			<div id="wrap">
+				<div id="display_question"><img align="center" src="static/logo.png"></img></div>
+				<div id="score_table"></div>
+			</div>
+			</body>
+	<script>
+	
+	function loadDocScore() {
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+				if (xhttp.readyState == 4 && xhttp.status == 200) {
+				document.getElementById('score_table').innerHTML = xhttp.responseText;
+					};
+				}
+		xhttp.open("GET", "/score", true);
+		xhttp.send();
+		}
+		
+		
+	function loadDocQuestion() {
+		var xhttp = new XMLHttpRequest();
+		xhttp.onreadystatechange = function() {
+				if (xhttp.readyState == 4 && xhttp.status == 200) {
+				document.getElementById('display_question').innerHTML = xhttp.responseText;
+					};
+				}
+		xhttp.open("GET", "/question", true);
+		xhttp.send();
+		}
+	setInterval(loadDocScore, 3000);
+	setInterval(loadDocQuestion, 3000);
+	
+	</script>
+</html>
