@@ -1,0 +1,43 @@
+body {
+	background-color : #ffffff
+}
+
+#display_question {
+	color: red;
+	font-family: sans-serif;
+	font-size:300%;
+}
+
+#wrap {
+    width: 100%; /*can be in percentage also.*/
+    height: auto;
+    margin: 0 auto;
+    padding: 10px;
+    position: relative;
+}
+
+table {
+	border-collaps: collapse;
+	padding:10px;
+}
+
+tr {
+	border: 0px;
+}
+
+td {
+	border: 0px;
+}
+
+th{
+	background: black;
+	color: white;
+}
+
+tr:nth-child(even) {
+	background: #CCC;
+	}
+	
+tr:nth-child(odd) {
+	background: #DDD;
+	}
