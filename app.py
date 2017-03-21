@@ -7,11 +7,9 @@ app = Flask(__name__)
 question = ''
 teams = {}
 
+
 def get_count():
-	if teams:
-		return range(max([len(teams[team]) for team in teams]))
-	else:
-		return False
+	return range(max(len(teams[team]) for team in teams) if teams else False
 
 @app.route('/')
 def index():
@@ -63,10 +61,7 @@ def score():
 
 @app.route('/question')
 def question():
-	if question:
-		return question
-	else:
-		return ''
+	return question or ''
 
 if __name__ == '__main__':
 	app.run(host='0.0.0.0')
