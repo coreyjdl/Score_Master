@@ -2,14 +2,48 @@ from flask import Flask, render_template, redirect, url_for, request, send_file
 
 from jinja2 import Template
 
+from collections import defaultdict
+
 app = Flask(__name__)
 
-question = ''
-teams = {}
+class DefaultList(list):
 
+    def __init__(self, it=None, default=0):
+        self.default = [default]
+        list.__init__(self, it or [])
+
+    def __setitem__(self, idx, value):
+        if idx >= len(self):
+            self.extend(self.default*(idx-len(self)+1))
+        list.__setitem__(self, idx, value)
+
+
+class TriviaSession():
+	
+	def __init__(self, instance_id):
+		self.instance_id = instance_id #will be shared with the URL trivial.com/?session=instance_id
+		self.question = ''
+		self.teams = defaultdict(DefaultList)
+		
+	def required_column_count(self):
+		return max(self.teams.values(), key=len) if self.teams else False
+	
+	def delete_team(self, team):
+		self.teams.pop(team)
+	
+	def add_team(self, team):
+		self.teams[team]
+	
+	def set_score(self, team, round, score):
+	    self.teams[team][round] = score
+
+
+
+question = ''
+teams = defaultdict(DefaultList)
 
 def get_count():
-	return range(max(len(teams[team]) for team in teams) if teams else False
+	return max(teams.values(), key=len) if teams else False
 
 @app.route('/')
 def index():
@@ -17,51 +51,42 @@ def index():
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
-	global question
+	global question  #fix this to be a class drawing from a databse
+	
 	if request.method == 'POST':
-		# FOR DEBUGING FORM 
-		# for key, value in request.form.items():
-			# print(key, value )
-		# FOR DEBUGING FORM 
+					
+		question = request.form.get('question', question)
 		
-		if request.form.get('question', False):
-			question = request.form['question']
-		
-		if request.form.get('add_team', False):
-			teams[request.form['add_team']] = []
+		new_team = request.form.get('add_team', False)
+		teams[new_team] if new_team else None
 			
 		for data in request.form:
-			if data[:5] == 'score':
-				edit = data.split(',')
-				team = edit[1]
-				index = int(edit[2])
-				score = request.form[data]
-				if team in teams:
-					if score != '':
-						if (index - 1) == len(teams[team]):
-							teams[team].append(score)
-						else:
-							teams[team][index - 1] = score
-				
-			if data[:3] == 'del':
-				del teams[request.form[data]]
+			teams.pop(request.form[data]) if data.startswith('del') else None
 			
+			if data.startswith('score'):
+			
+				_, team, index = data.split(',')
+				index = int(index) - 1
+
+				score = request.form[data]
+				score = int(score) if score else 0
+				
+				if team in teams:
+					teams[team][index] = score
+		
+			
+
 	template = Template(open('templates/admin.html').read())
-	
 	return template.render(question=question, teams=teams, q_count=get_count())
 		 	
 @app.route('/score')
 def score():	
-	if teams:
-		template = Template(open('templates/scores.html').read())
-
-		return template.render(teams=teams, q_count=get_count())
-	else:
-		return ''
+	template = Template(open('templates/scores.html').read())
+	return template.render(teams=teams, q_count=get_count()) if teams else ''
 
 @app.route('/question')
-def question():
-	return question or ''
-
+def set_question():
+	return question
+	
 if __name__ == '__main__':
-	app.run(host='0.0.0.0')
+	app.run(host='0.0.0.0', port=80)
