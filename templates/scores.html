@@ -1,18 +1,22 @@
-<table id="score">
-	<tr>
-		<th>Team Name</th>
-		{% if q_count %}
-		{%- for i in q_count %}
-		<th>Q{{loop.index}}</th>
-		{%- endfor %}
-		{%- endif %}
-	</tr>
-	{%- for team in teams %}
-	<tr>
-		<td>{{team}}</td>
-		{%- for score in teams[team] %}
-			<td>{{score}}</td>
+<div class="table-responsive">
+	<table id="score" class="table table-striped">
+		<tr>
+			<th>Team Name</th>
+			{% if q_count %}
+			{%- for i in q_count %}
+			<th>Q{{loop.index}}</th>
+			{%- endfor %}
+			{%- endif %}
+			<th>Total</th>
+		</tr>
+		{%- for team in teams %}
+		<tr>
+			<td>{{team}}</td>
+			{%- for i in q_count %}
+				<td>{{teams[team][loop.index0]}}</td>
+			{% endfor %}
+			<td>{{teams[team]|sum()}}</td>
+		</tr>
 		{% endfor %}
-	</tr>
-	{% endfor %}
-</table>
+	</table>
+</div>

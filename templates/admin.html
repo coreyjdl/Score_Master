@@ -1,25 +1,29 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<!-- link rel="stylesheet" type="text/css" href="/static/style.css"-->
-		<style>
-			#entry {
-				width: 30px;
-			}
-		</style>
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+		<!-- Optional theme -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 	</head>
+
 	<body>
-		<div id="wrap">
-			<div id="question">{{question}}</div>
-			
+		<div class="container-fluid">
+			<div class="jumbotron jumbotron-fluid">
+				<div id="question">{{question}}</div>
+			</div>
 			<form action="" method="post">
-				<textarea rows="10" cols="100" id="question" name="question"></textarea><br>
-				<input type="submit" id="question_button" value="Post Question">
+				<textarea rows="10" cols="100" id="question" name="question" class="form-control"></textarea><br>
+				<input type="submit" id="question_button" value="Post Question" class="btn btn-primary">
 			</form>
-			
+			<br><br>
 			<fieldset>
 			<form action="" method="post" id="scores">
-				<table id="score">
+				<table id="score" class="table table-striped">
 					<tr>
 						<th>Team Name</th>
 						{% if q_count %}
@@ -29,36 +33,40 @@
 									<th>Q{{ loop.index + 1 }}</th>
 							{%- endif %}
 						{%- endfor %}
+						{%- else %}
+							<th>Q1</th>
 						{% endif %}
+						<th>Total</th>
 						<th>Delete Team</th>
 					</tr>
 					{%- for team in teams %}
 					<tr>
 						<td>{{team}}</td>
 						{%- if teams[team] %}
-							{%- for score in teams[team] %}
-								<td><input id="entry" type="text" name="score,{{team}},{{loop.index}}" value="{{score}}"></td>
+							{%- for i in q_count %}
+							{#- for score in teams[team] #}
+								<td><input id="entry" type="text" name="score,{{team}},{{loop.index}}" value="{{teams[team][loop.index -1]}}" class="form-control"></td>
 									{%- if q_count %}
 										{%- if loop.last %}
-											<td><input id="entry" type="text" name="score,{{team}},{{loop.index + 1}}"></td>
+											<td><input id="entry" type="text" name="score,{{team}},{{loop.index + 1}}" class="form-control"></td>
 										{%- endif -%}
 									{%- endif -%}
 							{%- endfor %}
 						{% else %}
-							<td><input id="entry" type="text" class="score" name="score,{{team}},1" value=""></td>
+							<td><input id="entry" type="text" class="score" name="score,{{team}},1" value="" class="form-control"></td>
 						{% endif %}
+						<td>{{teams[team]|sum()}}</td>
 						<td headers="Delete Team"><input id="entry" type="checkbox" id="delete" name="del{{loop.index}}" value="{{team}}">Delete Team</td>
 					</tr>
 					{% endfor %}
-			
 				</table>
-				<input type="submit" id="post_button" value="Submit Changes"></input>
+				<input type="submit" id="post_button" value="Submit Changes" class="btn btn-primary"></input>
 			</form>
 			</fieldset>
-			
+			<br><br>
 			<form id="add_team" method="post" action="/admin">
 				<input type="text" name="add_team" id="add_team">
-				<input type="submit" value="Add Team">
+				<input type="submit" value="Add Team" class="btn btn-primary">
 			</form>
 		</div>
 	</body>
